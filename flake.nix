@@ -14,7 +14,7 @@
 
         pname = "ts-helper";
         versionNumber = "0.0.1";
-        versionSuffix = "${self.lastModifiedDate}.${if self ? "rev" then self.rev else "dirty"}";
+        versionSuffix = "${self.lastModifiedDate}.${self.rev or "dirty"}";
         version = "${versionNumber}+${versionSuffix}";
 
         callErl = (pkgs.callPackage "${nixpkgs}/pkgs/development/beam-modules/lib.nix" { }).callErlang;
@@ -39,7 +39,7 @@
           tsHelper = packages.buildMix' {
             inherit pname version;
 
-            src = self;
+            src = ./.;
 
             mixSha256 = "sha256-uOrYb78s2B5rjS5LScx//TOO203xA130tWi3zPGWPAc=";
 
