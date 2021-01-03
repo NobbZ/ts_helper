@@ -3,24 +3,30 @@
 <table>
   <tr>
     <td>
-      <%= f = form_for :skills, "#", [phx_change: :change, phx_submit: :save] %>
+      <%= f = form_for @changeset, "#", phx_change: :change, phx_submit: :save, as: :skills %>
         <%= label f, :hero_trade %>
-        <%= text_input f, :hero_trade, value: @hero_trade %>
+        <%= text_input f, :hero_trade %>
+        <%= error_tag f, :hero_trade %>
 
         <%= label f, :hero_skill %>
-        <%= text_input f, :hero_skill, value: @hero_skill %>
+        <%= text_input f, :hero_skill %>
+        <%= error_tag f, :hero_skill %>
 
         <%= label f, :tool %>
-        <%= text_input f, :tool, value: @tool %>
+        <%= text_input f, :tool %>
+        <%= error_tag f, :tool %>
 
         <%= label f, :companion %>
-        <%= text_input f, :companion, value: @companion %>
+        <%= text_input f, :companion %>
+        <%= error_tag f, :companion %>
 
         <%= label f, :workshop %>
-        <%= text_input f, :workshop, value: @workshop %>
+        <%= text_input f, :workshop %>
+        <%= error_tag f, :workshop %>
 
         <%= label f, :magic %>
-        <%= text_input f, :magic, value: @magic %>
+        <%= text_input f, :magic %>
+        <%= error_tag f, :magic %>
       </form>
     </td>
     <td>
