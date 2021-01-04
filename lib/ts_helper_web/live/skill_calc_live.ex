@@ -32,7 +32,7 @@ defmodule TsHelperWeb.SkillCalcLive do
   end
 
   def handle_event("change", %{"skills" => skills}, socket) do
-    case changeset(skills) do
+    case changeset(skills) |> Map.put(:action, :update) do
       %{valid?: true} = cs ->
         data = Ecto.Changeset.apply_changes(cs)
 
