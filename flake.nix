@@ -22,7 +22,12 @@
           withSystemd = false;
         }).override { wxSupport = false; };
 
+        erl22systemd = pkgs.beam.interpreters.erlangR22;
+
         packages = with pkgs.beam; packagesWith erl22;
+        packagesSystemd = with pkgs.beam; packagesWith erl22systemd;
+
+        ex = "elixir_1_10";
 
         me = self.packages.${system};
       in
@@ -34,7 +39,7 @@
             contents = self.packages.x86_64-linux.tsHelper;
           };
         }) // {
-          elixir = packages.elixir_1_10;
+          elixir = packages.${ex};
           erlang = packages.erlang;
           tsHelper = packages.buildMix' {
             inherit pname version;
@@ -112,7 +117,7 @@
             lefthook
             nodejs
             nixpkgs-fmt
-          ]) ++ (with me; [ elixir erlang ])
+          ]) ++ ([ packagesSystemd.erlang packagesSystemd.${ex} ])
           ++ (with pkgs.nodePackages; [ npm node2nix ])
           ++ pkgs.lib.optional (system != "x86_64-darwin") pkgs.inotify-tools;
 
