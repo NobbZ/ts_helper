@@ -78,6 +78,5 @@ defmodule TsHelperWeb.SkillCalcLive do
     |> Ecto.Changeset.validate_number(:companion, [lower, upper, message])
     |> Ecto.Changeset.validate_number(:workshop, [lower, upper, message])
     |> Ecto.Changeset.validate_number(:magic, [lower, upper, message])
-    |> IO.inspect()
   end
 end
