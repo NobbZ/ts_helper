@@ -1,1 +1,16 @@
 <h1>Character List</h1>
+
+<table>
+  <thead>
+    <tr>
+      <td>Name</td>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for char <- @chars do %>
+      <tr>
+        <td><%= char.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -3,6 +3,8 @@ defmodule TsHelperWeb.CharsLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    chars = TsHelper.Avatars.list_chars()
+
+    {:ok, assign(socket, chars: chars)}
   end
 end
