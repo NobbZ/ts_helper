@@ -19,6 +19,10 @@ jobs:
         extra_nix_config: |
           experimental-features = nix-command flakes
     - run: docker login quay.io --username ${{ secrets.DOCKER_USER }} --password ${{ secrets.DOCKER_PASS }}
+    - uses: cachix/cachix-action@v8
+      with:
+        name: mycache
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix build -L .#tsHelperImage
     - run: |
         if [ ${{ github.ref }} = "refs/heads/master" ]; then
@@ -27,7 +31,7 @@ jobs:
           tag=staging
         fi
         docker load -i result
-        docker tag quay.io/nobbz/ts_helper:g${{ github.sha }} quay.io/nobbz/ts_helper:$tag
+        docker tag quay.io/nobbz/ts-helper:g${{ github.sha }} quay.io/nobbz/ts-helper:$tag
         for img in $(docker images --quiet --all); do
           docker push $img
         done
