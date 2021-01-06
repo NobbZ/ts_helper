@@ -24,6 +24,10 @@ defmodule TsHelperWeb.CharLiveTest do
     test "char has delete buton", %{char: char, connected: page} do
       assert page |> has_element?("tr.char button.delete#delete-#{char.id}")
     end
+
+    test "char can be deleted", %{char: char, connected: page} do
+      refute page |> element("tr.char button#delete-#{char.id}") |> render_click() =~ char.name
+    end
   end
 
   defp create_char(_ctx) do

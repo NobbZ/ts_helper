@@ -7,4 +7,9 @@ defmodule TsHelperWeb.CharsLive do
 
     {:ok, assign(socket, chars: chars)}
   end
+
+  @impl true
+  def handle_event("delete_click", %{"char-id" => char_id}, socket) do
+    {:noreply, socket}
+  end
 end

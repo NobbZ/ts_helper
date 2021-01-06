@@ -10,7 +10,14 @@
     <%= for char <- @chars do %>
       <tr class="char">
         <td class="char-name"><%= char.name %></td>
-        <td class="actions"><%= button "Delete", to: "#", id: "delete-#{char.id}", class: "delete", data: [confirm: "Are you sure?"], phx_click: :delete_click %></td>
+        <td class="actions">
+          <%= button "Delete", to: "#",
+              id: "delete-#{char.id}",
+              class: "delete",
+              data: [confirm: "Are you sure?"],
+              phx_value_char_id: char.id,
+              phx_click: :delete_click %>
+        </td>
       </tr>
     <% end %>
   </tbody>
