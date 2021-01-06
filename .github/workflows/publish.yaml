@@ -21,7 +21,7 @@ jobs:
     - run: docker login quay.io --username ${{ secrets.DOCKER_USER }} --password ${{ secrets.DOCKER_PASS }}
     - uses: cachix/cachix-action@v8
       with:
-        name: mycache
+        name: ts-helper
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix build -L .#tsHelperImage
     - run: |
