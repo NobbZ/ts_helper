@@ -18,8 +18,9 @@ defmodule TsHelperWeb.Router do
     pipe_through :browser
 
     live "/", PageLive, :index
-
     live "/skill_calc", SkillCalcLive, :index
+
+    live "/chars", CharsLive, :index
   end
 
   # Other scopes may use custom stacks.
