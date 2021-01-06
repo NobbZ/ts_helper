@@ -32,6 +32,6 @@ jobs:
         fi
         docker load -i result
         docker tag quay.io/nobbz/ts-helper:g${{ github.sha }} quay.io/nobbz/ts-helper:$tag
-        for img in $(docker images --quiet --all); do
+        for img in $(docker images --format '{{.Repository}}:{{.Tag}}'); do
           docker push $img
         done
