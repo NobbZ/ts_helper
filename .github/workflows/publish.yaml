@@ -2,9 +2,6 @@ name: "Build and Push"
 
 on:
   push:
-    branches:
-    - main
-    - dev
 
 jobs:
   builds:
@@ -23,15 +20,25 @@ jobs:
         name: ts-helper
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix build -L .#tsHelperImage
-    - run: |
+    - env:
+        repo: quay.io/nobbz/ts-helper
+        base: g${{ github.sha }}
+      run: |
         docker login quay.io --username ${{ secrets.DOCKER_USER }} --password ${{ secrets.DOCKER_PASS }}
-        if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-          tag=latest
-        else
-          tag=staging
-        fi
+        case "${{ github.ref }}" in
+          refs/heads/main)
+            tag=latest
+            ;;
+          refs/heads/dev)
+            tag=staging
+            ;;
+          refs/tags/*)
+            tag=v$(git describe)
+            ;;
+        esac
         docker load -i result
-        docker tag quay.io/nobbz/ts-helper:g${{ github.sha }} quay.io/nobbz/ts-helper:$tag
+        if ! [ -z "$tag" ]; then docker tag $repo:$base $repo:$tag; fi
+        docker tag $repo:$base $repo:d$(git describe --long)
         for img in $(docker images --filter=reference='quay.io/nobbz/*' --format '{{.Repository}}:{{.Tag}}'); do
           docker push $img
         done
