@@ -25,11 +25,13 @@ jobs:
     - run: nix build -L .#tsHelperImage
     - run: |
         docker login quay.io --username ${{ secrets.DOCKER_USER }} --password ${{ secrets.DOCKER_PASS }}
-        if [ ${{ github.ref }} = "refs/heads/master" ]; then
+        set -ex
+        if [[ ${{ github.ref }} == "refs/heads/master" ]]; then
           tag=latest
         else
           tag=staging
         fi
+        set +ex
         docker load -i result
         docker tag quay.io/nobbz/ts-helper:g${{ github.sha }} quay.io/nobbz/ts-helper:$tag
         for img in $(docker images --filter=reference='quay.io/nobbz/*' --format '{{.Repository}}:{{.Tag}}'); do
