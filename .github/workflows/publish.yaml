@@ -19,7 +19,6 @@ jobs:
       with:
         name: ts-helper
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: nix build -L .#tsHelperImage
     - env:
         repo: quay.io/nobbz/ts-helper
         base: g${{ github.sha }}
@@ -36,7 +35,7 @@ jobs:
             tag=v$(git describe)
             ;;
         esac
-        docker load -i result
+        nix run .#streamImage
         if ! [ -z "$tag" ]; then docker tag $repo:$base $repo:$tag; fi
         docker tag $repo:$base $repo:d$(git describe --long)
         for img in $(docker images --filter=reference='quay.io/nobbz/*' --format '{{.Repository}}:{{.Tag}}'); do
