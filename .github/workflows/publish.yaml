@@ -35,7 +35,7 @@ jobs:
             tag=v$(git describe)
             ;;
         esac
-        nix run .#streamImage | docker load
+        nix run .#streamImage
         if ! [ -z "$tag" ]; then docker tag $repo:$base $repo:$tag; fi
         docker tag $repo:$base $repo:d$(git describe --long)
         for img in $(docker images --filter=reference='quay.io/nobbz/*' --format '{{.Repository}}:{{.Tag}}'); do
