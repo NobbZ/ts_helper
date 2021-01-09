@@ -1,0 +1,22 @@
+<h1>Show Trade</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, TsHelperWeb.TradeLive.FormComponent,
+    id: @trade.id,
+    title: @page_title,
+    action: @live_action,
+    trade: @trade,
+    return_to: Routes.trade_show_path(@socket, :show, @trade) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @trade.name %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.trade_show_path(@socket, :edit, @trade), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.trade_index_path(@socket, :index) %></span>

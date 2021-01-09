@@ -21,6 +21,9 @@ defmodule TsHelperWeb.Router do
     live "/skill_calc", SkillCalcLive, :index
 
     live "/chars", CharsLive, :index
+
+    live "/trades", TradeLive.Index, :index
+    live "/trades/:id", TradeLive.Show, :show
   end
 
   # Other scopes may use custom stacks.
