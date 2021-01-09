@@ -26,7 +26,9 @@ defmodule TsHelperWeb.CharLiveTest do
     end
 
     test "char can be deleted", %{char: char, connected: page} do
-      refute page |> element("tr.char button#delete-#{char.id}") |> render_click() =~ char.name
+      page |> element("tr.char button#delete-#{char.id}") |> render_click()
+      refute page |> element("table") |> render() =~ char.name
+      assert page |> element(".alert-info") |> render() =~ char.name
     end
   end
 
