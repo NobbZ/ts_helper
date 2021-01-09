@@ -33,11 +33,14 @@
       in
       {
         packages = (pkgs.lib.optionalAttrs (system == "x86_64-linux") {
-          tsHelperImage = pkgs.dockerTools.buildLayeredImage {
+          tsHelperImage = pkgs.dockerTools.streamLayeredImage {
             name = "quay.io/nobbz/${self.packages.x86_64-linux.tsHelper.pname}";
             tag = if self ? rev then "g${self.rev}" else "dontpush";
             contents = self.packages.x86_64-linux.tsHelper;
           };
+          tsHelperImageStreamer = pkgs.writeShellScript "image-streamer" ''
+            ${self.packages.${system}.tsHelperImage} | docker load
+          '';
         }) // {
           elixir = packages.${ex};
           erlang = packages.erlang;
@@ -109,6 +112,10 @@
         };
 
         defaultPackage = me.tsHelper;
+
+        apps = (pkgs.lib.optionalAttrs (system == "x86_64-linux") {
+          streamImage = { type = "app"; program = "${self.packages.${system}.tsHelperImageStreamer}"; };
+        });
 
         devShell = pkgs.mkShell {
           nativeBuildInputs = (with pkgs; [
