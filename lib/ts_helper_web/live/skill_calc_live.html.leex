@@ -31,14 +31,14 @@
     </td>
     <td>
       <table>
-        <%= for {name, base, value, factor} <- @skills do %>
+        <%= for skill <- @skills do %>
           <tr>
-            <td><%= name %></td>
-            <td><%= base %></td>
+            <td><%= skill.name %></td>
+            <td><%= skill.base %></td>
             <td>×</td>
-            <td><%= factor %></td>
+            <td><%= skill.mod %></td>
             <td>=</td>
-            <td><%= value %></td>
+            <td><%= skill.real %></td>
           </tr>
         <% end %>
         <tr>
