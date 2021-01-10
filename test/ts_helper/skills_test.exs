@@ -19,11 +19,6 @@ defmodule TsHelper.SkillsTest do
       trade
     end
 
-    test "list_trades/0 returns all trades" do
-      trade = trade_fixture()
-      assert Skills.list_trades() == [trade]
-    end
-
     test "get_trade!/1 returns the trade with given id" do
       trade = trade_fixture()
       assert Skills.get_trade!(trade.id) == trade

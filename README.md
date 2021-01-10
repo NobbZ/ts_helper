@@ -11,6 +11,14 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
+## Database bootstrap
+
+A database with the following extensions needs to exist:
+
+```SQL
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public
+```
+
 ## Learn more
 
   * Official website: https://www.phoenixframework.org/

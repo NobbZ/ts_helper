@@ -21,7 +21,6 @@
     <%= for trade <- @trades do %>
       <tr id="trade-<%= trade.id %>">
         <td><%= trade.name %></td>
-
         <td>
           <span><%= live_redirect "Show", to: Routes.trade_show_path(@socket, :show, trade) %></span>
         </td>
