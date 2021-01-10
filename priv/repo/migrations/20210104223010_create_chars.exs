@@ -8,6 +8,5 @@ defmodule TsHelper.Repo.Migrations.CreateChars do
 
       timestamps()
     end
-
   end
 end
