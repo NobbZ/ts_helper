@@ -32,23 +32,9 @@
     <td>
       <table>
         <%= for skill <- @skills do %>
-          <tr>
-            <td><%= skill.name %></td>
-            <td><%= skill.base %></td>
-            <td>×</td>
-            <td><%= skill.mod %></td>
-            <td>=</td>
-            <td><%= skill.real %></td>
-          </tr>
+          <%= live_component(@socket, TsHelperWeb.SkillCalcSkillComponent, skill) %>
         <% end %>
-        <tr>
-          <td>magic</td>
-          <td><%= @magic %></td>
-          <td>×</td>
-          <td>1.0</td>
-          <td>=</td>
-          <td><%= @magic %></td>
-        </tr>
+        <%= live_component(@socket, TsHelperWeb.SkillCalcSkillComponent, name: :magic, base: @magic, mod: 1.0, real: @magic) %>
         <tr>
           <td>sum</td>
           <td></td>
