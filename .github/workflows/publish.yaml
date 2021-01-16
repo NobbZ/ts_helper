@@ -35,7 +35,7 @@ jobs:
             tag=v$(git describe)
             ;;
         esac
-        nix build .#tsHelper # build once for the output
+        nix build -L .#tsHelper # build once for the output
         nix run .#streamImage
         if ! [ -z "$tag" ]; then docker tag $repo:$base $repo:$tag; fi
         docker tag $repo:$base $repo:d$(git describe --long)
