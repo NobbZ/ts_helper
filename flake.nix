@@ -17,17 +17,7 @@
         versionSuffix = "${self.lastModifiedDate}.${self.rev or "dirty"}";
         version = "${versionNumber}+${versionSuffix}";
 
-        callErl = (pkgs.callPackage "${nixpkgs}/pkgs/development/beam-modules/lib.nix" { }).callErlang;
-        erl22 = (callErl "${nixpkgs}/pkgs/development/interpreters/erlang/R23.nix" {
-          # withSystemd = false;
-        }).override { wxSupport = false; withSystemd = false; };
-
-        erl22systemd = pkgs.beam.interpreters.erlangR23;
-
         packages = with pkgs.beam; packagesWith (interpreters.erlangR23.override { wxSupport = false; withSystemd = false; });
-        packagesSystemd = with pkgs.beam; packagesWith erl22systemd;
-
-        ex = "elixir_1_10";
 
         me = self.packages.${system};
       in
@@ -139,7 +129,7 @@
             lefthook
             nodejs
             nixpkgs-fmt
-          ]) ++ ([ packagesSystemd.erlang packagesSystemd.${ex} ])
+          ]) ++ (with me; [ erlang elixir ])
           ++ (with pkgs.nodePackages; [ npm node2nix ])
           ++ pkgs.lib.optional (system != "x86_64-darwin") pkgs.inotify-tools;
 
