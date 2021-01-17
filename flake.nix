@@ -1,5 +1,5 @@
 {
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-20.09";
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
   inputs.nix-beam.url = "github:hauleth/nix-elixir";
   inputs.nix-beam.flake = false;
@@ -17,17 +17,7 @@
         versionSuffix = "${self.lastModifiedDate}.${self.rev or "dirty"}";
         version = "${versionNumber}+${versionSuffix}";
 
-        callErl = (pkgs.callPackage "${nixpkgs}/pkgs/development/beam-modules/lib.nix" { }).callErlang;
-        erl22 = (callErl "${nixpkgs}/pkgs/development/interpreters/erlang/R22.nix" {
-          withSystemd = false;
-        }).override { wxSupport = false; };
-
-        erl22systemd = pkgs.beam.interpreters.erlangR22;
-
-        packages = with pkgs.beam; packagesWith erl22;
-        packagesSystemd = with pkgs.beam; packagesWith erl22systemd;
-
-        ex = "elixir_1_10";
+        packages = with pkgs.beam; packagesWith (interpreters.erlangR23.override { wxSupport = false; withSystemd = false; });
 
         me = self.packages.${system};
       in
@@ -42,12 +32,27 @@
             ${self.packages.${system}.tsHelperImage} | docker load
           '';
         }) // {
-          elixir = packages.${ex};
+          elixir = packages.elixir_1_11.override rec {
+            version = "1.11.3";
+            src = pkgs.fetchFromGitHub rec {
+              name = "elixir-${version}-source";
+              owner = "elixir-lang";
+              repo = "elixir";
+              rev = "v${version}";
+              sha256 = "sha256-DqmKpMLxrXn23fsX/hrjDsYCmhD5jbVtvOX8EwKBakc=";
+            };
+          };
           erlang = packages.erlang;
-          tsHelper = packages.buildMix' {
+          tsHelper = let
+            elixir = me.elixir;
+            fetchMixDeps = packages.callPackage "${nix-beam}/lib/fetch-mix-deps.nix" { inherit elixir; };
+            buildMix' = packages.callPackage "${nix-beam}/lib/build-mix.nix" { inherit elixir fetchMixDeps; };
+          in buildMix' {
             inherit pname version;
 
             src = ./.;
+
+            elixir = me.elixir;
 
             mixSha256 = "sha256-uOrYb78s2B5rjS5LScx//TOO203xA130tWi3zPGWPAc=";
 
@@ -79,7 +84,7 @@
             '';
           };
 
-          assetPipeline = (pkgs.callPackage ./assets { }).package;
+          assetPipeline = (pkgs.callPackage ./assets { nodejs = pkgs.nodejs-12_x; }).package;
           assets = pkgs.stdenv.mkDerivation {
             pname = "${pname}-assets";
             inherit version;
@@ -88,7 +93,7 @@
 
             NO_UPDATE_NOTIFIER = "true";
 
-            buildInputs = [ pkgs.nodePackages.npm ];
+            buildInputs = [ pkgs.nodePackages.npm pkgs.python2 ];
 
             patchPhase = ''
               substituteInPlace webpack.config.js \
@@ -124,7 +129,7 @@
             lefthook
             nodejs
             nixpkgs-fmt
-          ]) ++ ([ packagesSystemd.erlang packagesSystemd.${ex} ])
+          ]) ++ (with me; [ erlang elixir ])
           ++ (with pkgs.nodePackages; [ npm node2nix ])
           ++ pkgs.lib.optional (system != "x86_64-darwin") pkgs.inotify-tools;
 
