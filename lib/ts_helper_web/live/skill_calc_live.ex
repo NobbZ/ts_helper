@@ -4,10 +4,10 @@ defmodule TsHelperWeb.SkillCalcLive do
   import TsHelperWeb.ErrorHelpers
 
   @skill_defaults [
-    {:hero, 1, 0.4, 0.4},
-    {:tool, 0.0, 0.0, 0.3},
-    {:companion, 0.0, 0.0, 0.2},
-    {:workshop, 0.0, 0.0, 0.1}
+    %{name: :hero, base: 1, real: 0.4, mod: 0.4},
+    %{name: :tool, base: 0, real: 0, mod: 0.3},
+    %{name: :companion, base: 0, real: 0, mod: 0.2},
+    %{name: :workshop, base: 0, real: 0, mod: 0.1}
   ]
 
   @skills %{
@@ -45,10 +45,12 @@ defmodule TsHelperWeb.SkillCalcLive do
           }
           |> Enum.sort_by(&elem(&1, 1), :asc)
           |> Enum.with_index(1)
-          |> Enum.map(fn {{name, value}, idx} -> {name, value, value * idx / 10, idx / 10} end)
+          |> Enum.map(fn {{name, value}, idx} ->
+            %{name: name, base: value, real: value * idx / 10, mod: idx / 10}
+          end)
           |> Enum.reverse()
 
-        sum = data.magic + (skills |> Enum.map(&elem(&1, 2)) |> Enum.sum())
+        sum = data.magic + (skills |> Enum.map(& &1.real) |> Enum.sum())
 
         {:noreply,
          assign(socket,

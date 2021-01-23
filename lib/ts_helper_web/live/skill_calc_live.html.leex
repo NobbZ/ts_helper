@@ -31,24 +31,10 @@
     </td>
     <td>
       <table>
-        <%= for {name, base, value, factor} <- @skills do %>
-          <tr>
-            <td><%= name %></td>
-            <td><%= base %></td>
-            <td>×</td>
-            <td><%= factor %></td>
-            <td>=</td>
-            <td><%= value %></td>
-          </tr>
+        <%= for skill <- @skills do %>
+          <%= live_component(@socket, TsHelperWeb.SkillCalcSkillComponent, skill) %>
         <% end %>
-        <tr>
-          <td>magic</td>
-          <td><%= @magic %></td>
-          <td>×</td>
-          <td>1.0</td>
-          <td>=</td>
-          <td><%= @magic %></td>
-        </tr>
+        <%= live_component(@socket, TsHelperWeb.SkillCalcSkillComponent, name: :magic, base: @magic, mod: 1.0, real: @magic) %>
         <tr>
           <td>sum</td>
           <td></td>
