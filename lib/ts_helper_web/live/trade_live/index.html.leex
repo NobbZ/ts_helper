@@ -1,0 +1,30 @@
+<h1>Listing Trades</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal @socket, TsHelperWeb.TradeLive.FormComponent,
+    id: @trade.id || :new,
+    title: @page_title,
+    action: @live_action,
+    trade: @trade,
+    return_to: Routes.trade_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="trades">
+    <%= for trade <- @trades do %>
+      <tr id="trade-<%= trade.id %>">
+        <td><%= trade.name %></td>
+        <td>
+          <span><%= live_redirect "Show", to: Routes.trade_show_path(@socket, :show, trade) %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
