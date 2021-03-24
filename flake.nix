@@ -122,6 +122,10 @@
           streamImage = { type = "app"; program = "${self.packages.${system}.tsHelperImageStreamer}"; };
         });
 
+        checks = {
+          tsHelper = me.tsHelper;
+        };
+
         devShell = pkgs.mkShell {
           nativeBuildInputs = (with pkgs; [
             docker-compose
