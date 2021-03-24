@@ -5,7 +5,9 @@
   inputs.nix-beam.flake = false;
 
   outputs = { self, nixpkgs, flake-utils, nix-beam }:
-    flake-utils.lib.eachDefaultSystem (system:
+    ({
+      checks.x86_64-linux.tsHelper = self.defaultPackage.x86_64-linux;
+    }) // (flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
           inherit system;
@@ -122,10 +124,6 @@
           streamImage = { type = "app"; program = "${self.packages.${system}.tsHelperImageStreamer}"; };
         });
 
-        checks = {
-          tsHelper = me.tsHelper;
-        };
-
         devShell = pkgs.mkShell {
           nativeBuildInputs = (with pkgs; [
             docker-compose
@@ -143,5 +141,5 @@
 
           ERL_INCLUDE_PATH = "${me.erlang}/lib/erlang/usr/include";
         };
-      });
+      }));
 }
